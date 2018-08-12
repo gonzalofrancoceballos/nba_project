@@ -1,3 +1,7 @@
+'''
+Library to request data from mysportsfeeds.com
+'''
+
 import requests
 from base64 import b64encode
 import json
@@ -15,9 +19,11 @@ def request_data(address, login):
     '''
     Wrapper function to send a request to server
     
-    :param: address: address for request
-    :login login: login for the request 
+    :param address: (str) address for request
+    :param login: (b'str) login for the request. Login format is b'{key}:MYSPORTSFEEDS'
+    :return: (dict) python dictionary containing requested data
     '''
+
     userAndPass = b64encode(login).decode("ascii")
     print('Requesting ... {}'.format(address))
     r = requests.get(address,
@@ -25,8 +31,8 @@ def request_data(address, login):
     
     str_content = r.content.decode("utf-8") 
     
-    obj = json.loads(str_content)
-    return obj
+    py_dict_data = json.loads(str_content)
+    return py_dict_data
 
 
 
@@ -35,11 +41,11 @@ def get_seasonal_games(login, year_from=2017, year_to = 2018,
     '''
     Wrapper function to get season games
     
-    :param login: login for the request
-    :param year_from: beginning of season
-    :param yeat_to: end of season
-    :param season: regular or playoff
-    :to_file: to save json to disk
+    :param login: (b'str) login for the request. Login format is b'{key}:MYSPORTSFEEDS'
+    :param year_from: (int) beginning of season
+    :param yeat_to: (int) end of season
+    :param season: (str) regular or playoff
+    :to_file: (boolean) to save json to disk
     :return: python dictionary containing requested data    
     '''
     
@@ -59,11 +65,11 @@ def get_daily_games(login, date,
     '''
     Wrapper function to get games for a given day
     
-    :param login: login for the request
-    :param date: data in YYYYMMDD format
-    :param season: regular or playoff
-    :to_file: to save json to disk
-    :return: python dictionary containing requested data    
+    :param login: (b'str) login for the request. Login format is b'{key}:MYSPORTSFEEDS'
+    :param date: (str) date in YYYYMMDD format
+    :param season: (str) 'regular' or 'playoff'
+    :to_file: (boolean) to save json to disk
+    :return: (dict) python dictionary containing requested data    
     '''
     
     year_to = int(date[0:4])
@@ -89,13 +95,13 @@ def get_seasonal_player_logs(login,
                              season='regular',
                              to_file=False):
     '''
-    Wrapper function to get games for a given day
+    Wrapper function to get player log for a given day
     
-    :param login: login for the request
-    :param date: data in YYYYMMDD format
-    :param season: regular or playoff
-    :to_file: to save json to disk
-    :return: python dictionary containing requested data    
+    :param login: (b'str) login for the request. Login format is b'{key}:MYSPORTSFEEDS'
+    :param date: (str) date in YYYYMMDD format
+    :param season: (str) 'regular' or 'playoff'
+    :to_file: (boolean) to save json to disk
+    :return: (dict) python dictionary containing requested data    
     '''
     
     address = 'https://api.mysportsfeeds.com/v2.0/pull/nba/{}-{}-{}/player_gamelogs.json'.format(year_from,
@@ -122,13 +128,13 @@ def get_daily_player_logs(login,
     
     ### STILL IN DEVELOPMENT
     '''
-    Wrapper function to get games for a given day
+    Wrapper function to player log for a given day
     
-    :param login: login for the request
-    :param date: data in YYYYMMDD format
-    :param season: regular or playoff
-    :to_file: to save json to disk
-    :return: python dictionary containing requested data    
+    :param login: (b'str) login for the request. Login format is b'{key}:MYSPORTSFEEDS'
+    :param date: (str) date in YYYYMMDD format
+    :param season: (str) 'regular' or 'playoff'
+    :to_file: (boolean) to save json to disk
+    :return: (dict) python dictionary containing requested data    
     '''
 
     datetime_object = datetime.strptime(date, '%Y%m%d')
@@ -160,11 +166,11 @@ def get_daily_player_stats(login,
     '''
     Wrapper function to get player stats for a given day
     
-    :param login: login for the request
-    :param date: data in YYYYMMDD format
-    :param season: regular or playoff
-    :to_file: to save json to disk
-    :return: python dictionary containing requested data    
+    :param login: (b'str) login for the request. Login format is b'{key}:MYSPORTSFEEDS'
+    :param date: (str) date in YYYYMMDD format
+    :param season: (str) 'regular' or 'playoff'
+    :to_file: (boolean) to save json to disk
+    :return: (dict) python dictionary containing requested data    
     '''
 
     address = 'https://api.mysportsfeeds.com/v2.0/pull/nba/{}-{}-{}/player_stats_totals.json?date={}'.format(year_from,
@@ -188,13 +194,13 @@ def get_game_play_by_play(login,
                           season='regular',
                           to_file=False):
     '''
-    Wrapper function to get play by play of a game
+    Wrapper function to get play-by-play of a game
     
-    :param login: login for the request
-    :param game_id: data in YYYYMMDD format
-    :param season: regular or playoff
-    :to_file: to save json to disk
-    :return: python dictionary containing requested data    
+    :param login: (b'str) login for the request. Login format is b'{key}:MYSPORTSFEEDS'
+    :param game_id: (str) data in YYYYMMDD format
+    :param season: (str) 'regular' or 'playoff'
+    :to_file: (boolean) to save json to disk
+    :return: (dict) python dictionary containing requested data    
     '''
 
     address = 'https://api.mysportsfeeds.com/v2.0/pull/nba/{}-{}-{}/games/{}/playbyplay.json'.format(year_from,
