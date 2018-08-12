@@ -1,2 +1,4 @@
-notebooks/*
-
+notebooks_hide/*
+src/__pycache__*
+src/__pycache
+src/__pycache__/*

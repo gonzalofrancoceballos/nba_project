@@ -5,7 +5,7 @@ Library to request data from mysportsfeeds.com
 import requests
 from base64 import b64encode
 import json
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
 season_dates = {"2016-2017" : {"regular_season" : {"from" : 20161025,"to" : 20170412},
