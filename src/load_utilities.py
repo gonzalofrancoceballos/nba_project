@@ -31,13 +31,17 @@ def request_data(address, login):
     
     str_content = r.content.decode("utf-8") 
     
-    py_dict_data = json.loads(str_content)
+    try: 
+      py_dict_data = json.loads(str_content)
+    except:
+      py_dict_data = {}
+
     return py_dict_data
 
 
 
 def get_seasonal_games(login, year_from=2017, year_to = 2018, 
-              season='regular',to_file=False):
+              season='regular',to_file=False, data_path="./../data/"):
     '''
     Wrapper function to get season games
     
@@ -53,7 +57,7 @@ def get_seasonal_games(login, year_from=2017, year_to = 2018,
     data = request_data(address, login)
     
     if to_file and len(data)>0:
-        file_name = 'data/seasonal/games_{}-{}-{}.json'.format(year_from, year_to, season)
+        file_name = '{}seasonal/games_{}-{}-{}.json'.format(data_path, year_from, year_to, season)
         print("Saving data to ... {}".format(file_name))
         with open(file_name, 'w') as outfile:
             json.dump(data, outfile)
@@ -61,7 +65,8 @@ def get_seasonal_games(login, year_from=2017, year_to = 2018,
 
 
 def get_daily_games(login, date, 
-              season='regular',to_file=False):
+              season='regular',to_file=False,
+              data_path="./../data/"):
     '''
     Wrapper function to get games for a given day
     
@@ -81,7 +86,7 @@ def get_daily_games(login, date,
     data = request_data(address, login)
     
     if to_file and len(data)>0:
-        file_name = 'data/daily/games_{}-{}.json'.format(date, season)
+        file_name = '{}daily/games_{}-{}.json'.format(data_path, date, season)
         print("Saving data to ... {}".format(file_name))
         with open(file_name, 'w') as outfile:
             json.dump(data, outfile)
@@ -93,7 +98,8 @@ def get_seasonal_player_logs(login,
                              year_from=2017, 
                              year_to=2018, 
                              season='regular',
-                             to_file=False):
+                             to_file=False,
+                             data_path="./../data/"):
     '''
     Wrapper function to get player log for a given day
     
@@ -110,7 +116,7 @@ def get_seasonal_player_logs(login,
     data = request_data(address, login)
     
     if to_file and len(data)>0:
-        file_name = 'data/seasonal/player_logs_{}-{}-{}.json'.format(year_from, year_to, season)
+        file_name = '{}seasonal/player_logs_{}-{}-{}.json'.format(data_path, year_from, year_to, season)
         print("Saving data to ... {}".format(file_name))
         with open(file_name, 'w') as outfile:
             json.dump(data, outfile)
@@ -124,7 +130,8 @@ def get_daily_player_logs(login,
                           year_from,
                           year_to,
                           season='regular',
-                          to_file=False):
+                          to_file=False,
+                          data_path="./../data/"):
     
     ### STILL IN DEVELOPMENT
     '''
@@ -148,7 +155,7 @@ def get_daily_player_logs(login,
     data = request_data(address, login)
     
     if to_file and len(data)>0:
-        file_name = 'data/daily/player_logs_{}-{}.json'.format(season, date)
+        file_name = '{}daily/player_logs_{}-{}.json'.format(data_path, season, date)
         print("Saving data to ... {}".format(file_name))
         with open(file_name, 'w') as outfile:
             json.dump(data, outfile)
@@ -162,7 +169,8 @@ def get_daily_player_stats(login,
                            year_from=2017, 
                            year_to=2018,
                            season='regular',
-                           to_file=False):
+                           to_file=False,
+                           data_path="./../data/"):
     '''
     Wrapper function to get player stats for a given day
     
@@ -179,7 +187,7 @@ def get_daily_player_stats(login,
     data = request_data(address, login)
     
     if to_file and len(data)>0:
-        file_name = 'data/daily/player_stats_{}-{}.json'.format(season, date)
+        file_name = '{}daily/player_stats_{}-{}.json'.format(data_path, season, date)
         print("Saving data to ... {}".format(file_name))
         with open(file_name, 'w') as outfile:
             json.dump(data, outfile)
@@ -192,7 +200,8 @@ def get_game_play_by_play(login,
                           year_from, 
                           year_to,
                           season='regular',
-                          to_file=False):
+                          to_file=False,
+                          data_path="./../data/"):
     '''
     Wrapper function to get play-by-play of a game
     
@@ -209,14 +218,15 @@ def get_game_play_by_play(login,
                                                                                                       game_id)
     data = request_data(address, login)
     
-    away_team = data["game"]["awayTeam"]["abbreviation"]
-    home_team = data["game"]["homeTeam"]["abbreviation"]
-    game_date = datetime.strptime(data["game"]["startTime"][0:10], '%Y-%m-%d').strftime('%Y%m%d')
+    
     
     if to_file and len(data)>0:
-        file_name = 'data/game/game_play_by_play_{}-{}-{}-{}.json'.format(game_date, away_team, home_team, game_id)
-        print("Saving data to ... {}".format(file_name))
-        with open(file_name, 'w') as outfile:
+      away_team = data["game"]["awayTeam"]["abbreviation"]
+      home_team = data["game"]["homeTeam"]["abbreviation"]
+      game_date = datetime.strptime(data["game"]["startTime"][0:10], '%Y-%m-%d').strftime('%Y%m%d')
+      file_name = '{}game/game_play_by_play_{}-{}-{}-{}.json'.format(data_path, game_date, away_team, home_team, game_id)
+      print("Saving data to ... {}".format(file_name))
+      with open(file_name, 'w') as outfile:
             json.dump(data, outfile)
             
     return data
